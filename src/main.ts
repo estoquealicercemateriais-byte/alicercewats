@@ -6,15 +6,7 @@ import { ProviderFiles } from '@api/provider/sessions';
 import { PrismaRepository } from '@api/repository/repository.service';
 import { HttpStatus, router } from '@api/routes/index.router';
 import { eventManager, waMonitor } from '@api/server.module';
-import {
-  Auth,
-  configService,
-  Cors,
-  HttpServer,
-  ProviderSession,
-  Sentry as SentryConfig,
-  Webhook,
-} from '@config/env.config';
+import { configService, Cors, HttpServer, ProviderSession, Sentry as SentryConfig, Webhook } from '@config/env.config';
 import { onUnexpectedError } from '@config/error.config';
 import { Logger } from '@config/logger.config';
 import { ROOT_DIR } from '@config/path.config';
@@ -81,7 +73,6 @@ async function bootstrap() {
           const tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
           const localISOTime = new Date(Date.now() - tzoffset).toISOString();
           const now = localISOTime;
-          const globalApiKey = configService.get<Auth>('AUTHENTICATION').API_KEY.KEY;
           const serverUrl = configService.get<HttpServer>('SERVER').URL;
 
           const errorData = {
@@ -95,7 +86,6 @@ async function bootstrap() {
               },
             },
             date_time: now,
-            api_key: globalApiKey,
             server_url: serverUrl,
           };
 

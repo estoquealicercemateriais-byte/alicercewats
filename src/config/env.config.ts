@@ -460,11 +460,14 @@ export class ConfigService {
         TYPE: (process.env.SERVER_TYPE as 'http' | 'https') || 'http',
         PORT: Number.parseInt(process.env.SERVER_PORT) || 8080,
         URL: process.env.SERVER_URL,
-        DISABLE_DOCS: process.env?.SERVER_DISABLE_DOCS === 'true',
-        DISABLE_MANAGER: process.env?.SERVER_DISABLE_MANAGER === 'true',
+        DISABLE_DOCS: process.env?.SERVER_DISABLE_DOCS !== 'false',
+        DISABLE_MANAGER: process.env?.SERVER_DISABLE_MANAGER !== 'false',
       },
       CORS: {
-        ORIGIN: process.env.CORS_ORIGIN?.split(',') || ['*'],
+        ORIGIN:
+          process.env.CORS_ORIGIN?.split(',')
+            .map((origin) => origin.trim())
+            .filter(Boolean) || [],
         METHODS:
           (process.env.CORS_METHODS?.split(',') as HttpMethods[]) ||
           (['POST', 'GET', 'PUT', 'DELETE'] as HttpMethods[]),
@@ -731,9 +734,7 @@ export class ConfigService {
         LANGUAGE: process.env.WA_BUSINESS_LANGUAGE || 'en',
       },
       LOG: {
-        LEVEL:
-          (process.env?.LOG_LEVEL?.split(',') as LogLevel[]) ||
-          (['ERROR', 'WARN', 'DEBUG', 'INFO', 'LOG', 'VERBOSE', 'DARK', 'WEBHOOKS', 'WEBSOCKET'] as LogLevel[]),
+        LEVEL: (process.env?.LOG_LEVEL?.split(',') as LogLevel[]) || (['ERROR', 'WARN', 'INFO', 'LOG'] as LogLevel[]),
         COLOR: process.env?.LOG_COLOR === 'true',
         BAILEYS: (process.env?.LOG_BAILEYS as LogBaileys) || 'error',
       },
@@ -866,7 +867,7 @@ export class ConfigService {
       },
       AUTHENTICATION: {
         API_KEY: {
-          KEY: process.env.AUTHENTICATION_API_KEY || 'BQYHJGJHJ',
+          KEY: process.env.AUTHENTICATION_API_KEY || '',
         },
         EXPOSE_IN_FETCH_INSTANCES: process.env?.AUTHENTICATION_EXPOSE_IN_FETCH_INSTANCES === 'true',
       },
@@ -878,7 +879,7 @@ export class ConfigService {
         ALLOWED_IPS: process.env?.METRICS_ALLOWED_IPS,
       },
       TELEMETRY: {
-        ENABLED: process.env?.TELEMETRY_ENABLED === undefined || process.env?.TELEMETRY_ENABLED === 'true',
+        ENABLED: process.env?.TELEMETRY_ENABLED === 'true',
         URL: process.env?.TELEMETRY_URL,
       },
       PROXY: {
